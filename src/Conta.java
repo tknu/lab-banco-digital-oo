@@ -17,18 +17,27 @@ public abstract class Conta implements IConta {
 
 	@Override
 	public void sacar(double valor) {
+		if (valor > saldo) {
+			throw new IllegalArgumentException("Saldo insuficiente para sacar");
+		}
 		saldo -= valor;
+		Log.log(String.format("Saque realizado com sucesso: %.2f na conta %d", valor, this.numero));
 	}
 
 	@Override
 	public void depositar(double valor) {
 		saldo += valor;
+		Log.log(String.format("Depósito realizado com sucesso: %.2f na conta %d", valor, this.numero));
 	}
 
 	@Override
 	public void transferir(double valor, IConta contaDestino) {
+		if (valor > saldo) {
+			throw new IllegalArgumentException("Saldo insuficiente para transferir");
+		}
 		this.sacar(valor);
 		contaDestino.depositar(valor);
+		Log.log(String.format("Transferência realizada com sucesso: %.2f na conta", valor, this.numero));
 	}
 
 	public int getAgencia() {
